@@ -31,6 +31,9 @@ resource "aws_instance" "managed-nodes" {
     Name = "jenkins-project"
   }
 }
+locals {
+  secgr-dynamic-ports = [22,5000,5432,3000]
+}
 
 resource "aws_security_group" "tf-sec-gr" {
   name = "project-jenkins-sec-gr"
@@ -38,11 +41,16 @@ resource "aws_security_group" "tf-sec-gr" {
   tags = {
     Name = "project-jenkins-sec-gr"
   }
-  ingress {
-    from_port        = 22
-    to_port          = 22
+  
+  dynamic "ingress" {
+    for_each = local.secgr-dynamic-ports
+    content {
+    from_port        = ingress.value
+    to_port          = ingress.value
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
+    }
+
 
   }
   ingress {
