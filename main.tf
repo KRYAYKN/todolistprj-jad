@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region= var.region
+  region = var.region
 
 }
 
@@ -22,10 +22,10 @@ variable "user" {
   default= "koray35"
 }
 resource "aws_instance" "managed-nodes" {
-  ami = ami-0230bd60aa48260c6
+  ami = "ami-0230bd60aa48260c6"
   instance_type = "t2.micro"
   key_name= var.key
-  vpc_security_group_ids= aws_security_group.tf-sec-gr.id
+  vpc_security_group_ids= [aws_security_group.tf-sec-gr.id]
   iam_instance_profile= "jenkins-project-profile-${var.user}"
   tags = {
     Name = "jenkins-project"
@@ -33,7 +33,7 @@ resource "aws_instance" "managed-nodes" {
 }
 
 resource "aws_security_group" "tf-sec-gr" {
-  name        = "project-jenkins-sec-gr"
+  name = "project-jenkins-sec-gr"
 
   tags = {
     Name = "project-jenkins-sec-gr"
